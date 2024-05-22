@@ -370,6 +370,7 @@
               <option value="monthly">Mensual (30 días - 12%)</option>
               <option value="quarterly">Trimestral (90 días - 13%)</option>
               <option value="yearly">Anual (365 días - 14%)</option>
+              <option value="decate">Decada (3650 días - 28%)</option>
             </select>
           </div>
           <div id="free-content" class="content" style="display: none">
@@ -385,6 +386,7 @@
                 <option value="weekly">Semana</option>
                 <option value="monthly">Mes</option>
                 <option value="yearly">Año</option>
+                <option value="decade">Decada</option>
               </select>
             </div>
 
@@ -705,6 +707,8 @@
             freeUnitToInvest = YEAR;
             period = years;
             break;
+          case 4:
+            console.log('hey')
         }
 
         let earnings = calculateReturns(
