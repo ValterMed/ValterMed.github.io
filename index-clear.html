@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Calculadora de rendimientos de inversión en sofipos o similares"
+    />
+    <meta
+      class="thumbnail-element"
+      name="thumbnail"
+      content="https://image.lexica.art/full_jpg/d43fd9bc-cd9a-487f-ba62-708454572ef4"
+    />
+    <title>💸 Investments</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #e0e0e0;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .thumbnail-element {
+        height: var(--preview-thumb-size);
+        width: var(--preview-thumb-size);
+      }
+
+      a {
+        text-decoration: none;
+        color: #357575;
+        font-weight: bold;
+      }
+
+      a:visited {
+        color: #357575; /* Cambia el color de los enlaces visitados */
+      }
+
+      h2 {
+        color: #333;
+      }
+
+      .form-container {
+        max-width: 400px;
+        background-color: #f4f4f4;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 0 auto;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #f4f4f4;
+        font-size: 14px;
+      }
+
+      .result-container input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+
+      #clean-button {
+        background-color: #357575;
+      }
+
+      input[type="button"] {
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      input[type="button"]:hover {
+        background-color: #45a049;
+      }
+
+      select {
+        width: 200px;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      select option {
+        padding: 8px;
+        font-size: 14px;
+      }
+
+      .error-tooltip {
+        position: relative;
+        color: #ff4f4f;
+      }
+
+      .error-tooltip::before,
+      .error-tooltip::after {
+        content: "";
+        position: absolute;
+        display: none;
+        z-index: 1;
+      }
+
+      .error-tooltip::before {
+        content: attr(data-error-message);
+        background-color: #ff4f4f;
+        color: #fff;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.2;
+        white-space: nowrap;
+        max-width: 200px;
+      }
+
+      .error-tooltip::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid #ff4f4f;
+      }
+
+      .error-tooltip:hover::before,
+      .error-tooltip:hover::after {
+        display: block;
+      }
+
+      .error-input {
+        border-color: #ff4f4f !important;
+      }
+
+      .toggle-section {
+        margin-bottom: 20px;
+      }
+
+      .toggle-section h3,
+      .title-1 h4,
+      .title-2 h4 {
+        cursor: pointer;
+        position: relative;
+        background-color: #cecece;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .toggle-section .arrow {
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        transform: translateY(-50%);
+        transition: transform 0.3s;
+      }
+
+      .title-1 .arrow-1,
+      .title-2 .arrow-2 {
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        transform: translateY(-50%);
+        transition: transform 0.3s;
+      }
+
+      .toggle-section .content {
+        display: none;
+        margin-top: 10px;
+        background-color: #cecece;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .title-1 .sub-content-1,
+      .title-2 .sub-content-2 {
+        display: none;
+      }
+
+      .toggle-section.active .content,
+      .title-1.active .sub-content-1,
+      .title-2.active .sub-content-2 {
+        display: block;
+      }
+
+      .toggle-section.active .arrow,
+      .title-1.active .arrow-1,
+      .title-2.active .arrow-2 {
+        transform: translateY(-50%) rotate(180deg);
+      }
+
+      .math-formula {
+        font-size: 20px;
+        font-family: "Times New Roman", serif;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        text-align: center;
+      }
+
+      th {
+        background-color: #357575;
+      }
+
+      tr:nth-child(even) {
+        background-color: #afcfb7;
+      }
+
+      tr:nth-child(odd) {
+        background-color: #f7f0f6;
+      }
+
+      .switch-container {
+        position: relative;
+        width: 60px;
+        height: 34px;
+        margin: 10px 0;
+      }
+
+      .switch {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .switch-label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 60px;
+        height: 34px;
+        background-color: #ccc;
+        border-radius: 34px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .switch-label:before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 28px;
+        height: 28px;
+        background-color: #fff;
+        border-radius: 28px;
+        transition: transform 0.3s;
+      }
+
+      .switch:checked + .switch-label {
+        background-color: #4caf50;
+      }
+
+      .switch:checked + .switch-label:before {
+        transform: translateX(26px);
+      }
+
+      .content {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+      }
+
+      .switch-wrapper {
+        display: flex;
+        align-items: center;
+      }
+
+      .switch-label-text-left {
+        margin: 0 10px 0 0;
+      }
+
+      .switch-label-text-right {
+        margin: 0 0 0 10px;
+      }
+
+      .option-container {
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Calculadora de inversión</h2>
+      <p>Comienza a invertir en tu futuro:</p>
+      <form id="investment-form">
+        <div class="form-group">
+          <label for="initial-investment">Inversión recurrente: </label>
+          <input
+            type="number"
+            id="initial-investment"
+            name="initial-investment"
+            required
+          />
+          <div id="initial-investment-error" class="error-tooltip"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="years">Tiempo a invertir:</label>
+          <input
+            type="number"
+            id="years"
+            name="years"
+            min="1"
+            max="100"
+            step="1"
+            value="1"
+            required
+          />
+          <div id="years-error" class="error-tooltip"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="investment-period"
+            >Periodo de inversión (porcentaje de rendimiento anualizado)</label
+          >
+          <div class="switch-wrapper">
+            <label class="switch-label-text-left">Personalizar</label>
+            <div class="switch-container">
+              <input
+                type="checkbox"
+                id="switch-button"
+                class="switch"
+                checked
+              />
+              <label for="switch-button" class="switch-label"></label>
+            </div>
+            <label class="switch-label-text-right">Opciones Klar [Eliminar]</label>
+          </div>
+          <div id="klar-content" class="content">
+            <select
+              id="investment-period"
+              name="investment-period"
+              onchange="setPeriodText()"
+              required
+            >
+              <option value="weekly">Semanal (7 días - 11%)</option>
+              <option value="monthly">Mensual (30 días - 12%)</option>
+              <option value="quarterly">Trimestral (90 días - 13%)</option>
+              <option value="yearly">Anual (365 días - 14%)</option>
+            </select>
+          </div>
+          <div id="free-content" class="content" style="display: none">
+            <div class="option-container">
+              <label for="free-investment-unit"> Unidad </label>
+              <select
+                id="free-investment-unit"
+                name="free-investment-unit"
+                onchange="setConfiguration()"
+                required
+              >
+                <option value="daily">Día</option>
+                <option value="weekly">Semana</option>
+                <option value="monthly">Mes</option>
+                <option value="yearly">Año</option>
+              </select>
+            </div>
+
+            <div id="free-investment-period-block" class="option-container">
+              <label for="free-investment-period">
+                Periodicidad (Cada cuando agregas dinero)
+              </label>
+              <input
+                type="number"
+                id="free-investment-period"
+                name="free-investment-period"
+                min="1"
+                max="365"
+                step="1"
+                value="1"
+                required
+              />
+              <div id="period-error" class="error-tooltip"></div>
+            </div>
+
+            <div class="option-container">
+              <label for="performance"> % Rendimiento </label>
+              <input
+                type="number"
+                id="performance"
+                name="performance"
+                min="1"
+                max="100"
+                step="1"
+                value="1"
+                required
+              />
+              <div id="performance-error" class="error-tooltip"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input
+            type="button"
+            value="Calcular ganancias"
+            onclick="startValidation()"
+          />
+          <input
+            id="clean-button"
+            type="button"
+            value="Limpiar form"
+            onclick="cleanForm()"
+          />
+        </div>
+
+        <div class="form-group">
+          <div
+            class="result-container"
+            id="result-container"
+            style="display: none"
+          >
+            <label for="result-value"
+              >Monto alcanzado al finalizar los años de inversión:</label
+            >
+            <input type="text" readonly id="result-value" name="result-value" />
+          </div>
+        </div>
+
+        <div class="toggle-section">
+          <h3 onclick="toggleContent('.toggle-section')">
+            Detalles <span class="arrow">▼</span>
+          </h3>
+          <div class="content">
+            <!-- write a title and a paragraph using bullet for each title and use beautiful styles -->
+            <div class="title-1">
+              <h4 onclick="toggleContent('.title-1')">
+                ¿Qué es una inversión recurrente?
+                <span class="arrow-1">▼</span>
+              </h4>
+              <div class="sub-content-1">
+                <p>
+                  Es una inversión que se realiza de manera periódica, es decir,
+                  cada cierto tiempo. En este caso, el periodo seleccionado para
+                  realizar una inversión es de cada
+                  <strong id="investment-period-text">semana</strong>.
+                </p>
+                <p>
+                  Esto significa que cada periodo se invertirá la cantidad
+                  ingresada en el campo de inversión recurrente.
+                </p>
+                <p>
+                  La primera vez, es decir, cuando iniciamos una inversión, sólo
+                  dispondremos de la cantidad que tengamos en "nuestro bolsillo"
+                  <strong>(capital inicial)</strong>, a partir del segundo
+                  periodo agregaremos los rendimientos generados para
+                  reinvertir.
+                </p>
+                <p>
+                  Es decir que a partir de nuestro
+                  <strong>segundo periodo</strong>, el monto que invertiríamos
+                  se expresaría como sigue:
+                </p>
+                <div class="math-formula">
+                  Nueva inversión = capital inicial + rendimientos generados +
+                  inversión recurrente
+                </div>
+                <p>
+                  Planteemos un ejemplo: vamos a invertir por primera vez y
+                  deseamos hacerlo con un capital inicial de $1,000 pesos y
+                  utilizaremos el periodo <strong>semanal</strong>.
+                </p>
+                <p>
+                  Además para poder reinvertir periódicamente como mostramos en
+                  la fórmula de arriba, deberemos seleccionar en la aplicación
+                  de <a href="https://signup.klar.mx/?code=MDIXQTLE">Klar</a> la
+                  opción de que al finalizar el periodo retiremos nuestro
+                  <strong>capital inicial</strong> más los
+                  <strong>rendimientos generados</strong>.
+                </p>
+                <p>
+                  De esta manera, nuestras semanas de inversión se verían como
+                  describe la siguiente tabla:
+                </p>
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Periodo</th>
+                      <th>Cantidad a invertir</th>
+                      <th>Rendimientos generados</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Semana 1</td>
+                      <td>$1,000</td>
+                      <td>$2.11</td>
+                    </tr>
+                    <tr>
+                      <td>Semana 2</td>
+                      <td>$2002,11</td>
+                      <td>$4.22</td>
+                    </tr>
+                    <tr>
+                      <td>Semana 3</td>
+                      <td>$3006.33</td>
+                      <td>$6.34</td>
+                    </tr>
+                    <tr>
+                      <td>Semana 4</td>
+                      <td>$4012.68</td>
+                      <td>$8.47</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p>
+                  Poniéndonos en perspectiva, si en lugar de invertir,
+                  hubiéramos guardado nuestro dinero en una alcancía cada
+                  semana, al finalizar el periodo de 4 semanas, tendríamos
+                  $4,000 pesos, sin embargo, al invertir con Klar, tendríamos
+                  $4,021.15 pesos (sumamos la segunda y tercera columna de la
+                  última fila), es decir, $21.15 pesos más que si hubiéramos
+                  guardado nuestro dinero en una alcancía.
+                </p>
+              </div>
+            </div>
+            <div class="title-2">
+              <h4 onclick="toggleContent('.title-2')">
+                Los porcentajes de rendimiento por periodo son anualizados, ¿Qué
+                significa?
+                <span class="arrow-2">▼</span>
+              </h4>
+              <div class="sub-content-2">
+                <p>
+                  Significa que el porcentaje de rendimiento que se muestra en
+                  cada periodo es el que se obtendría en un año. En este caso,
+                  los porcentajes de rendimiento anualizado son de 11%, 12%, 13%
+                  y 14% para los periodos de semana, mes, trimestre y año
+                  respectivamente.
+                </p>
+                <p>
+                  Para entenderlo mejor, observemos un ejemplo; supongamos que
+                  inviertes $1,000 pesos en un periodo de
+                  <strong>una semana</strong>. A éste periodo le corresponde un
+                  rendimiento anualizado del 11%, esto implica que si el monto
+                  de $1,000 permaneciera invertido por un año (365 días),
+                  obtendríamos $110.00 pesos de
+                  <strong>rendimiento anualizado</strong>:
+                </p>
+
+                <div class="math-formula">$1000 * 0.11 = $110</div>
+
+                <p>
+                  Sin embargo, de acuerdo a nuestro ejemplo, se ha escogido el
+                  periodo de <strong>una semana</strong>. Por lo tanto, será
+                  necesario calcular la parte proporcional con respecto a un
+                  año. Para ello, obtenemos el número de semanas que tiene un
+                  año:
+                </p>
+
+                <div class="math-formula">
+                  365 días / 7 días = 52.14 semanas
+                </div>
+
+                <p>Ahora tenemos el año en términos de semanas:</p>
+
+                <div class="math-formula">1 año = 52.14 semanas</div>
+
+                <p>
+                  Por lo tanto, para obtener el rendimiento que se obtendría en
+                  una semana, es necesario dividir el
+                  <strong>rendimiento anualizado</strong> entre el número de
+                  semanas que tiene un año:
+                </p>
+
+                <div class="math-formula">
+                  110 / 52.14 = 2.1097 &#8776; 2.11
+                </div>
+
+                <p>
+                  Por lo tanto, el rendimiento que se obtendría en nuestro
+                  ejemplo de invertir $1,000 durante una semana sería de $2.11
+                  pesos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const DAILY = 1;
+      const WEEK = 7;
+      const MONTH = 30;
+      const TRIMESTER = 90;
+      const YEAR = 365;
+      const WEEKS_IN_YEAR = 52;
+      const MONTHS_IN_YEAR = 12;
+      const TRIMESTERS_IN_YEAR = 4;
+
+      function startValidation() {
+        let initialInvestment = Number(
+          document.getElementById("initial-investment").value
+        );
+        let years = parseInt(document.getElementById("years").value);
+        let correctValues;
+
+        correctValues = makeValidations(initialInvestment, years);
+
+        if (correctValues) {
+          if (isKlarInvestment()) {
+            calculateKlarInvestment(initialInvestment, years);
+          } else {
+            calculateFreeInvestment(initialInvestment, years);
+          }
+        }
+      }
+
+      function makeValidations(initialInvestment, years) {
+        let defaultValidations =
+          validateInitialInvestment(initialInvestment) &&
+          validateYearsToInvest(years);
+
+        if (isKlarInvestment()) {
+          return defaultValidations;
+        } else {
+          let freeInvestmentUnit = document.getElementById(
+            "free-investment-unit"
+          ).selectedIndex;
+
+          switch (freeInvestmentUnit) {
+            case 0:
+            case 1:
+            case 2:
+              return (
+                defaultValidations &&
+                validatePeriodicity() &&
+                validatePerformance()
+              );
+            case 3:
+              return defaultValidations && validatePerformance();
+          }
+        }
+      }
+
+      function isKlarInvestment() {
+        return document.getElementById("switch-button").checked;
+      }
+
+      function calculateFreeInvestment(initialInvestment, years) {
+        let period;
+        let freeUnitToInvest;
+
+        let freeInvestmentUnit = document.getElementById(
+          "free-investment-unit"
+        ).selectedIndex;
+        let freeInvestmentPeriod = Number(
+          document.getElementById("free-investment-period").value
+        );
+        let performancePercentage =
+          Number(document.getElementById("performance").value) / 100;
+
+        switch (freeInvestmentUnit) {
+          case 0:
+            freeUnitToInvest = DAILY * freeInvestmentPeriod;
+            freeUnitsInYear = Math.floor(YEAR / freeUnitToInvest);
+            period = freeUnitsInYear * years;
+            break;
+          case 1:
+            freeUnitToInvest = WEEK * freeInvestmentPeriod;
+            freeUnitsInYear = Math.floor(YEAR / freeUnitToInvest);
+            period = freeUnitsInYear * years;
+            break;
+          case 2:
+            freeUnitToInvest = MONTH * freeInvestmentPeriod;
+            freeUnitsInYear = Math.floor(YEAR / freeUnitToInvest);
+            period = freeUnitsInYear * years;
+            break;
+          case 3:
+            freeUnitToInvest = YEAR;
+            period = years;
+            break;
+        }
+
+        let earnings = calculateReturns(
+          period,
+          initialInvestment,
+          performancePercentage,
+          freeUnitToInvest
+        );
+        showResults(earnings);
+      }
+
+      function setConfiguration() {
+        let freeInvestmentUnit = document.getElementById(
+          "free-investment-unit"
+        ).selectedIndex;
+        let freeInvestmentPeriod = document.getElementById(
+          "free-investment-period-block"
+        );
+        let freeInvestmentPeriodInput = document.getElementById(
+          "free-investment-period"
+        );
+
+        switch (freeInvestmentUnit) {
+          case 0:
+            freeInvestmentPeriodInput.min = 1;
+            freeInvestmentPeriodInput.max = 365;
+            freeInvestmentPeriod.style.display = "block";
+            break;
+          case 1:
+            freeInvestmentPeriodInput.min = 1;
+            freeInvestmentPeriodInput.max = 52;
+            freeInvestmentPeriod.style.display = "block";
+            break;
+          case 2:
+            freeInvestmentPeriodInput.min = 1;
+            freeInvestmentPeriodInput.max = 12;
+            freeInvestmentPeriod.style.display = "block";
+            break;
+          case 3:
+            freeInvestmentPeriod.style.display = "none";
+            break;
+        }
+      }
+
+      function calculateKlarInvestment(initialInvestment, years) {
+        let investmentPeriod =
+          document.getElementById("investment-period").selectedIndex;
+        let period;
+        let performancePercentage;
+        let timeToInvest;
+
+        switch (investmentPeriod) {
+          case 0:
+            performancePercentage = 0.11;
+            timeToInvest = WEEK;
+            period = WEEKS_IN_YEAR * years;
+            break;
+          case 1:
+            performancePercentage = 0.12;
+            timeToInvest = MONTH;
+            period = MONTHS_IN_YEAR * years;
+            break;
+          case 2:
+            performancePercentage = 0.13;
+            timeToInvest = TRIMESTER;
+            period = TRIMESTERS_IN_YEAR * years;
+            break;
+          case 3:
+            performancePercentage = 0.14;
+            timeToInvest = YEAR;
+            period = years;
+            break;
+        }
+
+        let earnings = calculateReturns(
+          period,
+          initialInvestment,
+          performancePercentage,
+          timeToInvest
+        );
+        showResults(earnings);
+      }
+
+      function calculateReturns(
+        period,
+        initialInvestment,
+        performancePercentage,
+        timeToInvest
+      ) {
+        let earnings = 0;
+        for (let i = 0; i < period; i++) {
+          let performance =
+            ((initialInvestment * performancePercentage) / YEAR) * timeToInvest;
+          initialInvestment = initialInvestment + performance;
+          earnings += initialInvestment;
+        }
+
+        return earnings;
+      }
+
+      function showResults(earnings) {
+        let resultValueInput = document.getElementById("result-value");
+        resultValueInput.value = "";
+        let formattedAmount = earnings.toLocaleString("es-MX", {
+          style: "currency",
+          currency: "MXN",
+        });
+        resultValueInput.value += formattedAmount;
+        document.getElementById("result-container").style.display = "block";
+      }
+
+      function validateInitialInvestment(initialInvestment) {
+        let initialInvestmentInput =
+          document.getElementById("initial-investment");
+        let initialInvestmentError = document.getElementById(
+          "initial-investment-error"
+        );
+
+        if (isNaN(initialInvestment) || initialInvestment <= 0) {
+          initialInvestmentError.textContent =
+            "Ingrese un valor numérico válido";
+          initialInvestmentInput.classList.add("error-input");
+          return false;
+        } else {
+          initialInvestmentError.textContent = "";
+          initialInvestmentInput.classList.remove("error-input");
+          return true;
+        }
+      }
+
+      function validateYearsToInvest(years) {
+        let yearsInput = document.getElementById("years");
+        let yearsError = document.getElementById("years-error");
+
+        if (isNaN(years) || years <= 0) {
+          yearsError.textContent = "Ingrese un valor numérico válido";
+          yearsInput.classList.add("error-input");
+          return false;
+        } else {
+          yearsError.textContent = "";
+          yearsInput.classList.remove("error-input");
+          return true;
+        }
+      }
+
+      function validatePeriodicity() {
+        let period = Number(
+          document.getElementById("free-investment-period").value
+        );
+        let periodInput = document.getElementById("free-investment-period");
+        let periodError = document.getElementById("period-error");
+        let freeInvestmentPeriodInput = document.getElementById(
+          "free-investment-period"
+        );
+        let minPeriod = freeInvestmentPeriodInput.min;
+        let maxPeriod = freeInvestmentPeriodInput.max;
+
+        if (isNaN(period) || period <= 0 || period > maxPeriod) {
+          periodError.textContent = `Ingrese un valor numérico válido (entre ${minPeriod} y ${maxPeriod})`;
+          periodInput.classList.add("error-input");
+          return false;
+        } else {
+          periodError.textContent = "";
+          periodInput.classList.remove("error-input");
+          return true;
+        }
+      }
+
+      function validatePerformance() {
+        let performance = Number(document.getElementById("performance").value);
+        let performanceInput = document.getElementById("performance");
+        let performanceError = document.getElementById("performance-error");
+
+        if (isNaN(performance) || performance <= 0 || performance > 100) {
+          performanceError.textContent =
+            "Ingrese un valor numérico válido (1 - 100)";
+          performanceInput.classList.add("error-input");
+          return false;
+        } else {
+          performanceError.textContent = "";
+          performanceInput.classList.remove("error-input");
+          return true;
+        }
+      }
+
+      function cleanForm() {
+        let isLastSwitchButtonStatusOn =
+          document.getElementById("switch-button").checked;
+        document.getElementById("investment-form").reset();
+        if (!isLastSwitchButtonStatusOn) {
+          document.getElementById("switch-button").checked = false;
+        }
+        setConfiguration();
+      }
+
+      function setPeriodText() {
+        let investmentPeriod =
+          document.getElementById("investment-period").selectedIndex;
+        let investmentPeriodText = document.getElementById(
+          "investment-period-text"
+        );
+        switch (investmentPeriod) {
+          case 0:
+            investmentPeriodText.textContent = "semana";
+            break;
+          case 1:
+            investmentPeriodText.textContent = "mes";
+            break;
+          case 2:
+            investmentPeriodText.textContent = "tres meses";
+            break;
+          case 3:
+            investmentPeriodText.textContent = "año";
+            break;
+        }
+      }
+
+      function toggleContent(className) {
+        let section = document.querySelector(className);
+        section.classList.toggle("active");
+      }
+
+      const switchButton = document.getElementById("switch-button");
+      const klarContent = document.getElementById("klar-content");
+      const freeContent = document.getElementById("free-content");
+
+      switchButton.addEventListener("change", function () {
+        if (this.checked) {
+          klarContent.style.display = "block";
+          freeContent.style.display = "none";
+        } else {
+          klarContent.style.display = "none";
+          freeContent.style.display = "block";
+        }
+      });
+    </script>
+  </body>
+</html>
